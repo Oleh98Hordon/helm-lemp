@@ -1,0 +1,103 @@
+nameOverride: ""
+fullnameOverride: ""
+
+serviceMysql:
+  port: 3306
+
+serviceWeb:
+  port: 80
+  type: LoadBalancer
+
+servicePhp:
+  port: 9000
+  protocol: TCP
+
+persistence:
+   accessMode: ReadWriteOnce
+   sizeMysql: 20Gi
+   sizeNginx: 1Gi
+
+imageTagMysql: mysql:5.7
+imageTagWeb: nginx:1.7.9
+imageTagPhp: php:7.2-fpm
+imageTagPhpAdmin: phpadmin/phpadmin:4.7
+
+resPhpAdmin:
+   resources:
+     cpu: 50m
+     memory: 50Mi
+   limits:
+     cpu: 100m
+     memory: 100Mi
+   env:
+   - name: PMA_HOST
+     value: mysql-service
+
+resPhp:
+   resources:
+     cpu: 50m
+     memory: 50Mi
+   limits:
+     cpu: 200m
+     memory: 200Mi
+
+resMysql:
+   resources:
+     cpu: 300m
+     memory: 100Mi
+   limits:
+     cpu: 1500m
+     memory: 512Mi
+   env:
+   -  name: MYSQL_ROOT_PASSWORD
+      valueFrom:  
+        secretKeyRef:
+          name: mysql-pass
+          key: password
+mysqlPath:
+   mountPath: /var/lib/mysql
+
+nginxPath:
+   mountPath1: /usr/share/nginx/html
+   mountPath2: /etc/nginx/conf.d
+
+pvPath:
+  path1: /mnt/nginx
+  path2: /mnt/mysql
+
+replicas: 3
+
+initContainers:
+  name: install
+  image: busybox
+  volumeMounts:
+  - name: nginx-pv-volume
+    mountPath: /mnt/nginx
+   command:
+   - wget
+   - "-O"
+   - "/mnt/nginx/index.php"
+   - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php
+
+nginxConfig:
+  config : |
+    server {
+      listen 80;
+      index index.php index.html;
+      server_name 192.168.31.152;
+      error_log  /var/log/nginx/error.log;
+      access_log /var/log/nginx/access.log;
+      root /usr/share/nginx/html;
+      location ~ \.php$ {
+          try_files $uri =404;
+          fastcgi_split_path_info ^(.+\.php)(/.+)$;
+          fastcgi_pass php:9000;
+          fastcgi_index index.php;
+          include fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+          fastcgi_param PATH_INFO $fastcgi_path_info;
+          }
+      }
+
+ingress:
+  enabled: false
