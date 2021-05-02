@@ -1,72 +1,62 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: mysql-service
-  labels:
-    app: mysql
+  name: {{ include "lemp_k8s_chart.fullname"}}
+  labels: {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
 spec:
-  ports:
-    - port: 3306
-  selector:
-    app: mysql
-    tier: mysql
   clusterIP: None
+  ports:
+    - port: {{ .Values.serviceMysql.port }}
+  selector: {{- include "lemp_k8s_chart.selectorLabels" . | nindent 4 }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: mysql-pvc
+  name: {{ include "lemp_k8s_chart.fullname" . }}-mysql-pvc
   labels:
-    app: mysql
+     {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
 spec:
   accessModes:
-    - ReadWriteOnce
+    - {{ .Values.persistence.accessMode | quote }}
   resources:
     requests:
-      storage: 20Gi
+      storage: {{ .Values.persistence.sizeMysql }}
 ---
 apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
 kind: Deployment
 metadata:
-  name: mysql
+  name: {{ include "lemp_k8s_chart.fullname" . }}-mysql
   labels:
-    app: mysql
+    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      app: mysql
-      tier: mysql
+      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
   strategy:
-    type: Recreate
+    type: {{ .Values.strategy.type }}
   template:
     metadata:
       labels:
-        app: mysql
-        tier: mysql
+        {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-      - image: mysql:5.7
+      - image: "{{ .Values.imageTagMysql }}"
         name: mysql
         resources:
-          requests:
-            memory: 100Mi
-            cpu: 300m
-          limits:
-            memory: 512Mi
-            cpu: 1500m
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:  
-            secretKeyRef:
-              name: mysql-pass
-              key: password
+  {{ toYaml .Values.resMysql | indent 10 }}
+        # env:
+        # - name: MYSQL_ROOT_PASSWORD
+        #   valueFrom:  
+        #     secretKeyRef:
+        #       name: mysql-pass
+        #       key: password
         ports:
-        - containerPort: 3306
+        - containerPort: {{ .Values.serviceMysql.port }}
           name: mysql
         volumeMounts:
         - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
+          mountPath: {{ .Values.mysqlPath.mountPath }}
       volumes:
       - name: mysql-persistent-storage
         persistentVolumeClaim:
-          claimName: mysql-pvc
+          claimName: {{ include "lemp_k8s_chart.fullname" . }}-mysql-pvc

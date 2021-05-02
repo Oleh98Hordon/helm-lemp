@@ -1,5 +1,4 @@
 kubectl apply -f pv-nginx.yaml \
--f php-service.yaml \
 -f nginx-configmap.yaml \
 -f nginx-deploy.yaml \
 -f secret.yaml \

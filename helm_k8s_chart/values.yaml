@@ -17,6 +17,9 @@ persistence:
    sizeMysql: 20Gi
    sizeNginx: 1Gi
 
+strategy:
+   type: Recreate
+
 imageTagMysql: mysql:5.7
 imageTagWeb: nginx:1.7.9
 imageTagPhp: php:7.2-fpm
@@ -41,6 +44,14 @@ resPhp:
      cpu: 200m
      memory: 200Mi
 
+resNginx:
+    requests:
+      memory: 50Mi
+      cpu: 50m
+    limits:
+      memory: 100Mi
+      cpu: 200m
+
 resMysql:
    resources:
      cpu: 300m
@@ -54,6 +65,7 @@ resMysql:
         secretKeyRef:
           name: mysql-pass
           key: password
+
 mysqlPath:
    mountPath: /var/lib/mysql
 

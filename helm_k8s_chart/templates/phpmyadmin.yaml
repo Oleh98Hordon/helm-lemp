@@ -1,20 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: phpmyadmin
+  name: {{ include "lemp_k8s_chart.fullname" . }}-phpmyadmin
   labels:
-    tier: backend
+    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
 spec:
-  replicas: 1
   selector:
     matchLabels:
-      app: phpmyadmin
-      tier: backend
+      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        app: phpmyadmin
-        tier: backend
+        {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
       - name: phpmyadmin
@@ -22,27 +19,20 @@ spec:
       - name: config
       containers:
       - name: phpmyadmin
-        image: phpmyadmin/phpmyadmin:4.7
+        image: {{ .Values.imageTagPhpAdmin}}
         resources:
-          requests:
-            memory: 50Mi
-            cpu: 50m
-          limits:
-            memory: 100Mi
-            cpu: 100m
+        {{ toYaml .Values.resPhpAdmin | indent 10 }}
         env:
         - name: PMA_HOST
-          value: mysql-service #<<<--- mysql service 
+          value: mysql-service  
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: phpmyadmin
-  namespace: default
-
+  name: {{ include "lemp_k8s_chart.fullname" . }}
 spec:
   selector:
-    app: phpmyadmin
-  type: LoadBalancer
+    {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+  type: {{ .Values.serviceWeb.type }}
   ports:
-    - port: 80
+    - port: {{ .Values.serviceWeb.port }}
