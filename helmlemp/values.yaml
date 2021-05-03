@@ -27,45 +27,49 @@ imageTagPhpAdmin: phpadmin/phpadmin:4.7
 
 resPhpAdmin:
    resources:
-     cpu: 50m
-     memory: 50Mi
-   limits:
-     cpu: 100m
-     memory: 100Mi
-   env:
-   - name: PMA_HOST
-     value: mysql-service
+     requests:
+       cpu: 50m
+       memory: 50Mi
+     limits:
+       cpu: 100m
+       memory: 100Mi
+     env:
+     - name: PMA_HOST
+       value: mysql-service
 
 resPhp:
    resources:
-     cpu: 50m
-     memory: 50Mi
-   limits:
-     cpu: 200m
-     memory: 200Mi
+     requests:
+       cpu: 50m
+       memory: 50Mi
+     limits:
+       cpu: 200m
+       memory: 200Mi
 
 resNginx:
-    requests:
-      memory: 50Mi
-      cpu: 50m
-    limits:
-      memory: 100Mi
-      cpu: 200m
+   resources:
+     requests:
+        memory: 50Mi
+        cpu: 50m
+     limits:
+        memory: 100Mi
+        cpu: 200m
 
 resMysql:
    resources:
-     cpu: 300m
-     memory: 100Mi
-   limits:
-     cpu: 1500m
-     memory: 512Mi
-   env:
-   -  name: MYSQL_ROOT_PASSWORD
-      valueFrom:  
-        secretKeyRef:
-          name: mysql-pass
-          key: password
-
+     requests:
+       cpu: 300m
+       memory: 100Mi
+     limits:
+       cpu: 1500m
+       memory: 512Mi
+     env:
+     -  name: MYSQL_ROOT_PASSWORD
+        valueFrom:  
+          secretKeyRef:
+            name: mysql-pass
+            key: password
+            
 mysqlPath:
    mountPath: /var/lib/mysql
 
