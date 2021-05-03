@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lemp_k8s_chart.fullname" . }}-php
+  labels:
+    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+spec:
+  selector:
+    {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+  ports:
+  - protocol: {{ .Values.servicePhp.protocol }}
+    port: {{ .Values.servicePhp.port }}
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lemp_k8s_chart.fullname" . }}-php
+  labels:
+    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: {{ include "lemp_k8s_chart" . }}-nginx-pvc-volume
+        persistentVolumeClaim:
+          claimName: {{ include "lemp_k8s_chart" . }}-nginx-pvc-volume
+      containers:
+      - name: php
+        image: "{{ .Values.imageTagPhp }}"
+        resources:
+      {{ toYaml .Values.resPhp | indent 10 }}
+        volumeMounts:
+        - name: {{ include "lemp_k8s_chart" . }}-nginx-pvc-volume
+          mountPath: {{ .Values.nginxPath.mountPath1}}
+      initContainers:
+      - name: install
+        image: busybox
+        volumeMounts:
+        - name: nginx-pv-volume
+          mountPath: /mnt/nginx
+        command:
+        - wget
+        - "-O"
+        - "/mnt/nginx/index.php"
+        - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php

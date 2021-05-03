@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "lemp_k8s_chart.fullname" . }}-phpmyadmin
+  labels:
+    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
+    spec:
+      volumes:
+      - name: phpmyadmin
+        emptyDir: {}
+      - name: config
+      containers:
+      - name: phpmyadmin
+        image: {{ .Values.imageTagPhpAdmin}}
+        resources:
+        {{ toYaml .Values.resPhpAdmin | indent 10 }}
+        env:
+        - name: PMA_HOST
+          value: mysql-service  
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "lemp_k8s_chart.fullname" . }}
+spec:
+  selector:
+    {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+  type: {{ .Values.serviceWeb.type }}
+  ports:
+    - port: {{ .Values.serviceWeb.port }}
