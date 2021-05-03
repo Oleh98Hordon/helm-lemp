@@ -23,7 +23,7 @@ strategy:
 imageTagMysql: mysql:5.7
 imageTagWeb: nginx:1.7.9
 imageTagPhp: php:7.2-fpm
-imageTagPhpAdmin: phpadmin/phpadmin:4.7
+imageTagPhpAdmin: phpmyadmin/phpmyadmin:4.7
 
 resPhpAdmin:
    resources:

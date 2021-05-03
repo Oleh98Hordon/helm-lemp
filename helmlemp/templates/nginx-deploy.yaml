@@ -31,7 +31,7 @@ spec:
           claimName: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
       - name: config
         configMap:
-          name: nginx-config
+          name: {{ include "helmlemp.fullname" . }}-nginx-config
           items:
           - key: config
             path: site.conf
