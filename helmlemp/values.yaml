@@ -33,9 +33,9 @@ resPhpAdmin:
      limits:
        cpu: 100m
        memory: 100Mi
-     env:
-     - name: PMA_HOST
-       value: mysql-service
+    #  env:
+    #  - name: PMA_HOST
+    #    value: mysql-service
 
 resPhp:
    resources:
@@ -63,13 +63,13 @@ resMysql:
      limits:
        cpu: 1500m
        memory: 512Mi
-     env:
-     -  name: MYSQL_ROOT_PASSWORD
-        valueFrom:  
-          secretKeyRef:
-            name: mysql-pass
-            key: password
-            
+    #  env:
+    #  -  name: MYSQL_ROOT_PASSWORD
+    #     valueFrom:  
+    #       secretKeyRef:
+    #         name: mysql-pass
+    #         key: password
+
 mysqlPath:
    mountPath: /var/lib/mysql
 
