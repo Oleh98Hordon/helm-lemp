@@ -1,17 +1,17 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}-phpmyadmin
+  name: {{ include "helmlemp.fullname" . }}-phpmyadmin
   labels:
-    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+    {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   selector:
     matchLabels:
-      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+      {{- include "helmlemp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-        {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
+        {{- include "helmlemp.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
       - name: phpmyadmin
@@ -29,10 +29,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}
+  name: {{ include "helmlemp.fullname" . }}
 spec:
   selector:
-    {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+    {{- include "helmlemp.selectorLabels" . | nindent 6 }}
   type: {{ .Values.serviceWeb.type }}
   ports:
     - port: {{ .Values.serviceWeb.port }}

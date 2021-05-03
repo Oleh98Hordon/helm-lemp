@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}-nginx-pvc-volume
+  name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
 spec:
   accessModes:
   - {{ .Values.persistence.accessMode | quote }}
@@ -12,23 +12,23 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}-nginx
+  name: {{ include "helmlemp.fullname" . }}-nginx
   labels:
-    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+    {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicas }}
   selector:
     matchLabels:
-      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+      {{- include "helmlemp.selectorLabels" . | nindent 6 }}
   template:
     metadata:
       labels:
-      {{- include "lemp_k8s_chart.selectorLabels" . | nindent 8 }}
+      {{- include "helmlemp.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-      - name: {{ include "lemp_k8s_chart" . }}-nginx-pvc-volume
+      - name: {{ include "helmlemp" . }}-nginx-pvc-volume
         persistentVolumeClaim:
-          claimName: {{ include "lemp_k8s_chart" . }}-nginx-pvc-volume
+          claimName: {{ include "helmlemp" . }}-nginx-pvc-volume
       - name: config
         configMap:
           name: nginx-config
@@ -49,10 +49,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name:  {{ include "lemp_k8s_chart.fullname" . }}
+  name:  {{ include "helmlemp.fullname" . }}
 spec:
   selector:
-    {{- include "lemp_k8s_chart.selectorLabels" . | nindent 6 }}
+    {{- include "helmlemp.selectorLabels" . | nindent 6 }}
   type: {{ .Values.serviceWeb.type }}
   ports:
     - port: {{ .Values.serviceWeb.port }}

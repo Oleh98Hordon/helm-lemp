@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}-nginx-pv-volume
+  name: {{ include "helmlemp.fullname" . }}-nginx-pv-volume
   labels:
-    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+    {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   capacity:
     storage: {{ .Values.persistence.size | quote }}
@@ -15,9 +15,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: {{ include "lemp_k8s_chart.fullname" . }}-mysql-pv-volume
+  name: {{ include "helmlemp.fullname" . }}-mysql-pv-volume
   labels:
-    {{- include "lemp_k8s_chart.labels" . | nindent 4 }}
+    {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   capacity:
     storage: {{ .Values.persistence.size | quote }}
