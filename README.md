@@ -1,1 +1,2 @@
-# helm-lemp
+## Welcome to my helmChart
+``` helm install <name> helmlemp/ ```
