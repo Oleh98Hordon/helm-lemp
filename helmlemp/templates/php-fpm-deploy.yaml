@@ -35,7 +35,7 @@ spec:
       - name: php
         image: "{{ .Values.imageTagPhp }}"
         resources:
-{{ toYaml .Values.resPhp.resources | indent 10 }}
+{{ toYaml .Values.resPhp.resources | indent 12 }}
         volumeMounts:
         - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: {{ .Values.nginxPath.mountPath1}}

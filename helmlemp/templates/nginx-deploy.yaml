@@ -39,7 +39,7 @@ spec:
       - name: nginx
         image: "{{ .Values.imageTagWeb }}"
         resources:
-{{ toYaml .Values.resNginx.resources | indent 10 }}
+{{ toYaml .Values.resNginx.resources | indent 12 }}
         volumeMounts:
         - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: {{ .Values.nginxPath.mountPath1}}
