@@ -6,7 +6,7 @@ metadata:
     {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   capacity:
-    storage: {{ .Values.persistence.size | quote }}
+    storage: {{ .Values.persistence.sizeMysql | quote }}
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
   hostPath:
@@ -20,7 +20,7 @@ metadata:
     {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   capacity:
-    storage: {{ .Values.persistence.size | quote }}
+    storage: {{ .Values.persistence.sizeMysql | quote }}
   accessModes:
     - {{ .Values.persistence.accessMode | quote }}
   hostPath:
