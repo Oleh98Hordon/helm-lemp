@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helmlemp.fullname" . }}
+  name: {{ include "helmlemp.fullname" . }}-mysql
   labels: {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
   clusterIP: None

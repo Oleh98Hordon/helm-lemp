@@ -29,7 +29,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "helmlemp.fullname" . }}
+  name: {{ include "helmlemp.fullname" . }}-phpmyadmin
 spec:
   selector:
     {{- include "helmlemp.selectorLabels" . | nindent 6 }}
