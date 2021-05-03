@@ -21,7 +21,7 @@ spec:
       - name: phpmyadmin
         image: {{ .Values.imageTagPhpAdmin}}
         resources:
-        {{ toYaml .Values.resPhpAdmin | indent 10 }}
+{{ toYaml .Values.resPhpAdmin | indent 10 }}
         env:
         - name: PMA_HOST
           value: mysql-service  

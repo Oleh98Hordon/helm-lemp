@@ -5,4 +5,4 @@ metadata:
   labels:
     {{- include "helmlemp.labels" . | nindent 4 }}
 data:
-  {{ toYaml .Values.resMysql | indent 2 }}
+{{ toYaml .Values.nginxConfig | indent 2 }}

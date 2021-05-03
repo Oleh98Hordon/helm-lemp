@@ -43,7 +43,7 @@ spec:
       - image: "{{ .Values.imageTagMysql }}"
         name: mysql
         resources:
-  {{ toYaml .Values.resMysql | indent 10 }}
+{{ toYaml .Values.resMysql | indent 10 }}
         # env:
         # - name: MYSQL_ROOT_PASSWORD
         #   valueFrom:  
