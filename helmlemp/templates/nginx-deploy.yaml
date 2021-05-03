@@ -26,9 +26,9 @@ spec:
       {{- include "helmlemp.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-      - name: {{ include "helmlemp" . }}-nginx-pvc-volume
+      - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
         persistentVolumeClaim:
-          claimName: {{ include "helmlemp" . }}-nginx-pvc-volume
+          claimName: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
       - name: config
         configMap:
           name: nginx-config
@@ -41,7 +41,7 @@ spec:
         resources:
   {{ toYaml .Values.resNginx | indent 10 }}
         volumeMounts:
-        - name: nginx-pv-volume
+        - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: {{ .Values.nginxPath.mountPath1}}
         - name: config
           mountPath: {{ .Values.nginxPath.mountPath2}}

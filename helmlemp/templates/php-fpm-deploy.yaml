@@ -28,22 +28,22 @@ spec:
         {{- include "helmlemp.selectorLabels" . | nindent 8 }}
     spec:
       volumes:
-      - name: {{ include "helmlemp" . }}-nginx-pvc-volume
+      - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
         persistentVolumeClaim:
-          claimName: {{ include "helmlemp" . }}-nginx-pvc-volume
+          claimName: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
       containers:
       - name: php
         image: "{{ .Values.imageTagPhp }}"
         resources:
-      {{ toYaml .Values.resPhp | indent 10 }}
+{{ toYaml .Values.resPhp | indent 10 }}
         volumeMounts:
-        - name: {{ include "helmlemp" . }}-nginx-pvc-volume
+        - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: {{ .Values.nginxPath.mountPath1}}
       initContainers:
       - name: install
         image: busybox
         volumeMounts:
-        - name: nginx-pv-volume
+        - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: /mnt/nginx
         command:
         - wget
