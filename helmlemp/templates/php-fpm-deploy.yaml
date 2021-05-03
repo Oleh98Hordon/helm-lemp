@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: php
+  name: {{ include "helmlemp.fullname" . }}-php
   labels:
     {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
@@ -15,7 +15,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: php
+  name: {{ include "helmlemp.fullname" . }}-php
   labels:
     {{- include "helmlemp.labels" . | nindent 4 }}
 spec:
@@ -32,7 +32,7 @@ spec:
         persistentVolumeClaim:
           claimName: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
       containers:
-      - name: php
+      - name: {{ include "helmlemp.fullname" . }}-php
         image: "{{ .Values.imageTagPhp }}"
         resources:
 {{ toYaml .Values.resPhp.resources | indent 12 }}
@@ -40,13 +40,4 @@ spec:
         - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
           mountPath: {{ .Values.nginxPath.mountPath1}}
       initContainers:
-      - name: install
-        image: busybox
-        volumeMounts:
-        - name: {{ include "helmlemp.fullname" . }}-nginx-pvc-volume
-          mountPath: /mnt/nginx
-        command:
-        - wget
-        - "-O"
-        - "/mnt/nginx/index.php"
-        - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php
+{{ toYaml .Values.initContainers | indent 8 }}

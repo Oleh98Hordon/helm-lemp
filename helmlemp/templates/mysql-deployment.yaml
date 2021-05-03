@@ -22,7 +22,7 @@ spec:
     requests:
       storage: {{ .Values.persistence.sizeMysql }}
 ---
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+apiVersion: apps/v1 
 kind: Deployment
 metadata:
   name: {{ include "helmlemp.fullname" . }}-mysql
@@ -48,7 +48,7 @@ spec:
         - name: MYSQL_ROOT_PASSWORD
           valueFrom:  
             secretKeyRef:
-              name: mysql-pass
+              name: {{ include "helmlemp.fullname" . }}-mysql-pass
               key: password
         ports:
         - containerPort: {{ .Values.serviceMysql.port }}

@@ -83,17 +83,17 @@ pvPath:
 
 replicas: 3
 
-#initContainers:
-#  name: install
-#  image: busybox
-#  volumeMounts:
-#  - name: nginx-pv-volume
-#    mountPath: /mnt/nginx
-#   command:
-#   - wget
-#   - "-O"
-#   - "/mnt/nginx/index.php"
-#   - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php
+initContainers:
+  name: install
+  image: busybox
+  volumeMounts:
+  - name: nginx-pv-volume
+    mountPath: /mnt/nginx
+   command:
+   - wget
+   - "-O"
+   - "/mnt/nginx/index.php"
+   - https://raw.githubusercontent.com/do-community/php-kubernetes/master/index.php
 
 nginxConfig:
   config : |
@@ -114,6 +114,8 @@ nginxConfig:
           fastcgi_param PATH_INFO $fastcgi_path_info;
           }
       }
+
+mysqlRootPassword: password
 
 ingress:
   enabled: false
